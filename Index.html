@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renjun Search Engine</title>
+    <style>
+        /* Gaya Tampilan (CSS) */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 700px;
+            text-align: center;
+            margin-top: 50px;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Bagian Visual Renjun */
+        .visual-container {
+            margin-bottom: 20px;
+        }
+        .visual-container img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #fff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: #4a54f1;
+            margin-bottom: 5px;
+        }
+        p.subtitle {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+        /* Kotak Pencarian */
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 30px;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .search-box input:focus {
+            border-color: #4a54f1;
+            box-shadow: 0 4px 12px rgba(74, 84, 241, 0.2);
+        }
+
+        /* Hasil Pencarian */
+        .results-container {
+            margin-top: 30px;
+            text-align: left;
+        }
+        .result-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+            border-left: 5px solid #4a54f1;
+        }
+        .result-card:hover {
+            transform: translateY(-2px);
+        }
+        .result-card h3 {
+            margin: 0 0 5px 0;
+            color: #222;
+        }
+        .result-card h3 a {
+            text-decoration: none;
+            color: #4a54f1;
+        }
+        .result-card h3 a:hover {
+            text-decoration: underline;
+        }
+        .result-card .category {
+            font-size: 0.75rem;
+            background: #eef0ff;
+            color: #4a54f1;
+            padding: 3px 8px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .result-card p {
+            margin: 0;
+            color: #555;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .no-result {
+            text-align: center;
+            color: #888;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="visual-container">
+            <img src="c:\Users\user\Pictures\Renjun\3.jpg" alt="Renjun Visual">
+        </div>
+
+        <h1>Injeolmi Search</h1>
+        <p class="subtitle">Cari informasi, profil, dan update terbaru tentang Renjun</p>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Ketik kata kunci (misal: profil, vokal, hobi)..." onkeyup="performaCari()">
+        </div>
+
+        <div id="searchResults" class="results-container"></div>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        // Logika Pencarian (JavaScript)
+        function performaCari() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const resultsContainer = document.getElementById('searchResults');
+            
+            // Bersihkan hasil sebelumnya jika input kosong
+            if (query.trim() === "") {
+                resultsContainer.innerHTML = "";
+                return;
+            }
+
+            // Filter data berdasarkan judul atau deskripsi
+            const filteredData = searchData.filter(item => {
+                return item.title.toLowerCase().includes(query) || 
+                       item.description.toLowerCase().includes(query) ||
+                       item.category.toLowerCase().includes(query);
+            });
+
+            // Cetak ke HTML
+            displayResults(filteredData);
+        }
+
+        function displayResults(results) {
+            const resultsContainer = document.getElementById('searchResults');
+            resultsContainer.innerHTML = "";
+
+            if (results.length === 0) {
+                resultsContainer.innerHTML = "<p class='no-result'>Hasil tidak ditemukan. Coba kata kunci lain!</p>";
+                return;
+            }
+
+            results.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'result-card';
+                card.innerHTML = `
+                    <span class="category">${item.category}</span>
+                    <h3><a href="${item.link}">${item.title}</a></h3>
+                    <p>${item.description}</p>
+                `;
+                resultsContainer.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>
